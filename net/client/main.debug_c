@@ -1,0 +1,26 @@
+/*File "klient.c" create by abstarct, (пт, 08-гру-2023 23:12:01 +0200)*/
+#include "../general/socket/socket.h"
+#include "client.h"
+#include <stdio.h>
+int geter(Client *client){
+   char string[32];
+   scanf("%s",string);
+   printf("you enter %s\n",string);
+   Packet packet={2,32,string};
+   session_send(client->session,&packet);
+   return 0;
+}
+int handler_test(Session *session,Packet *packet){
+   printf("get packet %s\n",packet->data);
+   return 0;
+}
+int main(int argc,char **argv){
+   Client *client=create_client("127.0.0.1",1223);
+   add_client_command(client,2,handler_test);
+   while(1){
+      int r=client_handler(client);
+      if(r)
+         geter(client);
+   }
+   close_client(client);
+}
