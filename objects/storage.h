@@ -3,6 +3,7 @@
 #define ABSTARCT_STORAGE_H_SENTURY
 #include "../graphick/reader.h"
 #include "../physick/physick.h"
+#include "../net/general/inet_structure.h"
 extern Animation* BoomAnimation;
 extern Animation* TankAnimationV;
 extern Animation* TankAnimationH;
@@ -20,17 +21,18 @@ typedef struct{
    float reload;
    Animation *anim_v,*anim_h;
    enum WorldSide rotate;
-   WINDOW *win;
+   WINDOW *win,*arrrow_win;
    bool fire;
+
 } Tank;
 typedef struct{
-   float x,y;
-   float dx,dy;
-   Tank* tank;
+   coord pos;
 } Bullet;
 typedef struct StorageGame{
+   int bullets_count,users_count;
+   Bullet bullets[32*4];
+   struct UserInfoPos users[32];
    Tank tank;
-   Bullet bullets[16];
 } StorageGame;
 typedef struct{
    WINDOW *win;

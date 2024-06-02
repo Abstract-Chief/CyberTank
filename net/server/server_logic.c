@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #define BulletVelocityAlpha -0.0005
-#define BulletVelocity 0.1
+#define BulletVelocity 0.01
 Player* GetPlayer(Session *session){
    for(int i=0;i<GlobalServer.count_players;i++){
       if(GlobalServer.player[i].session->id==session->id){

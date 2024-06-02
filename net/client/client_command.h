@@ -3,5 +3,8 @@
 #define ABSTARCT_CLIENT_COMMAND_H_SENTURY
 #include "client.h"
 int LoginServerHandler(Session* session,Packet *packet);
+int GameInfoResultHandler(Session* session,Packet *packet);
+int GetHitHandler(Session* session,Packet *packet);
+int GetSpawnHandler(Session* session,Packet *packet);
 
 #endif

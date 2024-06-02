@@ -19,6 +19,7 @@ typedef struct{
    coord pos;
    enum WorldSide rotate;
    double GunAngle;
+   bool move,fire;
    time_t SpawnTime;
    Session *session;
    char name[32];
@@ -33,5 +34,6 @@ Player* GetPlayer(Session *session);
 int add_player(Session* session,const char *name);
 void AddBullet(Player* player);
 int del_player(Session* session);
+void ServerLogic(int mils);
 extern ServerInfo GlobalServer;
 #endif

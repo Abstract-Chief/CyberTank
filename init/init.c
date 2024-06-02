@@ -1,6 +1,7 @@
 /*File "init.c" create by abstarct, (чт, 07-гру-2023 16:39:15 +0200)*/
 #include "../objects/storage.h"
 #include "init.h"
+#include <string.h>
 Animation* BoomAnimation;
 Animation* TankAnimationV;
 Animation* TankAnimationH;
@@ -24,11 +25,13 @@ void init_tank(Tank *tank,int x,int y,int hp,int reload,const char *filename_v,c
    tank->anim_h->speed=speed_anim;
    tank->anim_v->speed=speed_anim;
    tank->win=newwin(tank->anim_v->layers[0]->rows+10,tank->anim_v->layers[0]->cols+10,x,y);
+   tank->arrrow_win=newwin(4,4,0,0);
    tank->rotate=South;
    wrefresh(tank->win);
 }
 void init_storage(StorageGame *storage){
    init_tank(&storage->tank,10,10,0,0,"data/tank_v.eanim","data/tank_h.eanim",0.09);
+   memset(storage->users,0,sizeof(storage->users));
 }
 void init(){
    initscr();

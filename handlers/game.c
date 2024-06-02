@@ -2,6 +2,7 @@
 #include "handlers.h"
 #include "../net/client/client.h"
 #include "../net/general/packets/packets.h"
+#include "../graphick/map.h"
 int game(GameEngine *engine,int mils){
    int input=0,buf=0;
    while(buf!=-1){
@@ -11,8 +12,8 @@ int game(GameEngine *engine,int mils){
    Tank* tank=&engine->storage->tank;
    TankHandler(tank,input);
    move_tank(tank);
-   graphick_tank(tank,mils);
-   /*BulletLoop(mils);*/
+   graphick_world(engine,mils);
+   /*mvprintw(0,0,"%d %d   ",GlobalEngine->storage->bullets_count,GlobalEngine->storage->users_count);*/
    AnimationLoop(mils);
    refresh();
    werase(tank->win);

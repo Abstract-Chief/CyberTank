@@ -1,6 +1,7 @@
 /*File "client.c" create by abstarct, (сб, 09-гру-2023 13:19:42 +0200)*/
 #include "client.h"
 #include "../general/socket/socket.h"
+#include "../general/packets//packets.h"
 #include "../../Debugger/debug.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -33,7 +34,10 @@ int client_handler(Client *client){
       if(result<0 && client->stdin_flag) return 0;
       if(result<0){erprintf(1,"server terminated\n"); exit(1);}
       int (*command)(Session*,Packet*) = tree_get(client->tree,packet.type);
-      if(command==0) error(1,0,"unknown packet from server");
+      if(command==0){ 
+         erprintf(1,"Get Unknown Packet type %d %d %d\n",packet.type,GameInfoResultPacket,LoginServerResultPacket);
+         error(1,0,"unknown packet from server");
+      }
       command(client->session,&packet);
    }
    return 0;

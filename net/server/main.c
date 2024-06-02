@@ -7,7 +7,13 @@
 #include <errno.h>
 #include <error.h>
 #include <ncurses.h>
+#include <sys/time.h>
 #define USEC_TIMEOUT_SERVER 10000
+time_t get_utime(){
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 int ConnectHandler(Session *session){
    /*printf("succeful get connection handler %d\n",session->sock);*/
    return 0;
@@ -31,16 +37,19 @@ int main(int argc,char **argv){
    GlobalServer.count_bullet=0;
    GlobalServer.count_players=0;
    init_server_command(s);
+   time_t start_t=get_utime();
    //Server Work
    for(int i=0;1;i++){
-      int input=getch();
-      mvprintw(1,0,"%d",input);
-      graphick_server_info(s,5,10);
+      /*int input=getch();*/
+      int mils=get_utime()-start_t;
+      ServerLogic(mils);
+      start_t=get_utime();
+      graphick_server_info(mils,s,5,10);
       struct timeval timeout={0,USEC_TIMEOUT_SERVER};
       s->fdset_ret=s->fdset;
       int nready=select(s->maxfd+2,&s->fdset_ret,NULL,NULL,&timeout);
       if(nready==-1){
-         if(errno==EINTR) return 0;
+         if(errno==EINTR) continue;;
       }
       if(FD_ISSET(s->sock, &s->fdset_ret)){
          Session *session=Listen(s);
@@ -61,7 +70,7 @@ int main(int argc,char **argv){
          if(s->ConnectHandler(session)==1){
             s->CloseConnectionHandler(s,session);
          }
-         if(--nready<=0) continue;
+         if(--nready<=0) continue;;
       }     
       for(int i=0;i<=s->countfd;i++,nready--){
          if(FD_ISSET(s->clientfd[i], &s->fdset_ret)){
@@ -83,6 +92,7 @@ int main(int argc,char **argv){
             }
          }
       }
+   
    }
    close(s->sock);
    endwin();

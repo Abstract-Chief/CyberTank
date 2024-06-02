@@ -10,6 +10,7 @@ int main(){
    init_graphick_obj();
    raw();
    Client *client=create_client("127.0.0.1",1223);
+   add_client_command(client,GameInfoResultPacket,GameInfoResultHandler);
    add_client_command(client,LoginServerResultPacket,LoginServerHandler);
    GlobalEngine = create_game_engine();
    GlobalEngine->client=client;

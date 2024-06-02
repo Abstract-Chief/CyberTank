@@ -2,7 +2,9 @@
 #ifndef ABSTARCT_GHANDLERS_H_SENTURY
 #define ABSTARCT_GHANDLERS_H_SENTURY
 #include "../objects/storage.h"
+#include "../module/game_module.h"
 extern int MovingKeys[4];
+extern GameEngine* GlobalEngine;
 void TankHandler(Tank *tank,int input);
 void move_tank(Tank *tank);
 enum GameKeys{

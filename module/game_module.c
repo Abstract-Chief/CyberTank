@@ -45,6 +45,7 @@ int set_actual(GameEngine *engine,int n){
    if(engine->handlers[n]==0) return 1;
    engine->actual_n=n;
    engine->actual=engine->handlers[n];
+   clear();
    erprintf(1,"set_actualhandler %d",engine->actual);
    return 0;
 }

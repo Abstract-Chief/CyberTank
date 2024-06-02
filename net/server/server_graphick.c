@@ -22,12 +22,12 @@ void init_graphick(){
    init_pair(Blue,COLOR_BLUE,COLOR_BLUE);
 }
 const char *WorldSideText[4]={"North","East","South","West"};
-void graphick_server_info(Server *s,int x,int y){
+void graphick_server_info(int mils,Server *s,int x,int y){
    erase();
-   mvprintw(y,x,"ServerInfo: (players count) (bullets count) (session count)");
+   mvprintw(y,x,"ServerInfo: (players count) (bullets count) (session count) (time)");
    attron(COLOR_PAIR(NUllRed));
-   mvprintw(y+1,x,"                  %d             %d                  %d    ",
-         GlobalServer.count_players,GlobalServer.count_bullet,s->count);
+   mvprintw(y+1,x,"                  %d             %d                  %d      %d",
+         GlobalServer.count_players,GlobalServer.count_bullet,s->count,mils);
    attroff(COLOR_PAIR(NUllRed));
    mvprintw(y+2,x,"PlayerInfo");
    for(int i=0;i<GlobalServer.count_players;i++){
@@ -53,6 +53,12 @@ void graphick_server_info(Server *s,int x,int y){
       attron(COLOR_PAIR(NUllRed));
       printw("%f",pl->GunAngle);
       attroff(COLOR_PAIR(NUllRed));
+   }
+   y+=4+GlobalServer.count_players;
+   mvprintw(y,x,"BulletInfo");
+   for(int i=0;i<GlobalServer.count_bullet;i++){
+      Bullet* b=&GlobalServer.bullets[i];
+      mvprintw(y+i,x,"%d : x %f y %f dx %f dy %f from %d",i+1,b->x,b->y,b->dx,b->dy,b->TankId);
    }
    refresh();
 }

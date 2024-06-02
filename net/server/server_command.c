@@ -3,6 +3,7 @@
 #include "server_logic.h"
 #include "../general/inet_structure.h"
 #include <stdio.h>
+#include "../general/packets/packets.h"
    /*GetSpawnPacket=2,*/
    /*GetHitPacket,*/
    /*GameInfoResultPacket,*/
@@ -13,7 +14,21 @@
    /*UpdateGameInfoBulletPacket,*/
    /*UpdateGameTankInfoPacket,*/
 int GameInfoResultHandler(Session* session,Packet *packet){
-   /*printf("send for %d game info\n",session->id);*/
+   Packet packet_send={GameInfoResultPacket,0,0};
+   session_send(session,&packet_send);
+   int n_pl=GlobalServer.count_players-1;
+   write(session->sock,&GlobalServer.count_bullet,sizeof(int));
+   write(session->sock,&n_pl,sizeof(int));
+   for(int i=0;i<GlobalServer.count_bullet;i++){
+      coord bullet_pos={GlobalServer.bullets[i].x,GlobalServer.bullets[i].x};
+      write(session->sock,&bullet_pos,sizeof(coord));
+   }
+   for(int i=0;i<GlobalServer.count_players;i++){
+      Player* pl=&GlobalServer.player[i];
+      if(pl->session->id==session->id) continue;
+      struct UserInfoPos info={pl->pos,pl->rotate,pl->GunAngle,pl->session->id,pl->move,pl->fire};
+      write(session->sock,&info,UserInfoPosSize);
+   }
    return 0;
 }
 int LoginServerResultHandler(Session* session,Packet *packet){
@@ -40,5 +55,7 @@ int UpdateGameInfoTankHadler(Session* session,Packet *packet){
    pl->pos=info->pos;
    pl->rotate=info->rotate;
    pl->GunAngle=info->GunAngle;
+   pl->fire=info->fire;
+   pl->move=info->move;
    return 0;
 }

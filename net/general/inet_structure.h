@@ -2,11 +2,15 @@
 #ifndef ABSTARCT_INET_STRUCTURE_H_SENTURY
 #define ABSTARCT_INET_STRUCTURE_H_SENTURY
 #include "../../physick/physick.h"
-
+#include <curses.h>
+#define UserInfoPosSize (sizeof(coord)+sizeof(int)+sizeof(double)+sizeof(char)+2*sizeof(bool))
 struct UserInfoPos {
    coord pos;
    int rotate;
    double GunAngle;
+   char id;
+   bool move,fire;
+   WINDOW *win;
 };
 
 #endif
