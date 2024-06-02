@@ -8,18 +8,21 @@ int game(GameEngine *engine,int mils){
    while(buf!=-1){
       input=buf;
       buf=getch();
+      if(buf==3){
+         endwin();
+         exit(1);
+      }
    }
    Tank* tank=&engine->storage->tank;
    TankHandler(tank,input);
    move_tank(tank);
    graphick_world(engine,mils);
-   /*mvprintw(0,0,"%d %d   ",GlobalEngine->storage->bullets_count,GlobalEngine->storage->users_count);*/
    AnimationLoop(mils);
-   refresh();
-   werase(tank->win);
    Packet p={GetGameInfoPacket,0,0};
    session_send(engine->client->session,&p);
    client_handler(engine->client);
-
+   wnoutrefresh(stdscr);
+   doupdate();
+   werase(stdscr);
    return 0;
 }

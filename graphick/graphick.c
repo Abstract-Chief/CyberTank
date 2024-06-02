@@ -31,17 +31,13 @@ void graphick_arrow(Tank *tank,coord pos,int len){
    coord mvector=normilize(vector);
    mvector.x*=len*2;
    mvector.y*=len;
-   werase(tank->arrrow_win);
-   wrefresh(tank->arrrow_win);
-   refresh();
    if(get_module(vector)<=20) return;
-   mvwin(tank->arrrow_win,mvector.y+size.y/2,mvector.x+size.x/2);
-   wattron(tank->arrrow_win,COLOR_PAIR(Red));
-   mvwprintw(tank->arrrow_win,0,1,"#");
-   mvwprintw(tank->arrrow_win,1,0,"###");
-   mvwprintw(tank->arrrow_win,2,1,"#");
-   wattroff(tank->arrrow_win,COLOR_PAIR(Red));
-   wrefresh(tank->arrrow_win);
+   int y=mvector.y+size.y/2,x=mvector.x+size.x/2;
+   attron(COLOR_PAIR(Red));
+     mvprintw(y,x+1,"#");
+    mvprintw(y+1,x,"###");
+   mvprintw(y+2,x+1,"#");
+   attroff(COLOR_PAIR(Red));
 }
 /*void graphick_tank(Tank* tank,int mils){*/
    /*Animation *anim=(tank->rotate%2==0 ?  tank->anim_h : tank->anim_v);*/

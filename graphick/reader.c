@@ -108,6 +108,15 @@ bool graphick_anim(WINDOW *win,int x,int y,Animation *anim,float d,bool mirror_x
    } 
    return 0;
 }
+bool graphick_animc(WINDOW *win,int x,int y,Animation *anim,float d,bool mirror_x,bool mirror_y){
+   graphick_layer(win,x-anim->layers[0]->cols/2,y-anim->layers[0]->rows/2,anim->layers[(int)roundf(anim->n_layer)],mirror_x,mirror_y);
+   anim->n_layer+=d;
+   if(anim->n_layer>=anim->count-1){
+      anim->n_layer=0;
+      return 1;
+   } 
+   return 0;
+}
 coord CenterAnimation(Animation *tank){
    coord res={(float)tank->layers[0]->cols/2,(float)tank->layers[0]->rows/2};
    return res;

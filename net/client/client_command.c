@@ -21,8 +21,6 @@ int GameInfoResultHandler(Session* session,Packet *packet){
    for(int i=0;i<user_count;i++){
       read(session->sock,&GlobalEngine->storage->users[i],UserInfoPosSize);
       struct UserInfoPos *info = &GlobalEngine->storage->users[i];
-      if(info->win==NULL)
-         info->win=newwin(TankAnimationV->layers[0]->rows+10,TankAnimationV->layers[0]->cols+10,0,0);
       erprintf(1,"user: %f %f %d %lf",info->pos.x,info->pos.y,info->rotate,info->GunAngle);
    }
    GlobalEngine->storage->users_count=user_count;

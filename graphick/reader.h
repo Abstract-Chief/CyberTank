@@ -26,6 +26,7 @@ Animation* AnimationParse(const char* filename);
 Layer* LayerParse(const char* filename);
 void graphick_layer(WINDOW *win,int x,int y,Layer *layer,bool mirror_x,bool mirror_y);
 bool graphick_anim(WINDOW *win,int x,int y,Animation *anim,float d,bool mirror_x,bool mirror_y);
+bool graphick_animc(WINDOW *win,int x,int y,Animation *anim,float d,bool mirror_x,bool mirror_y);
 coord CenterAnimation(Animation *tank);
 
 #endif

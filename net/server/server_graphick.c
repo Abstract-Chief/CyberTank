@@ -58,7 +58,7 @@ void graphick_server_info(int mils,Server *s,int x,int y){
    mvprintw(y,x,"BulletInfo");
    for(int i=0;i<GlobalServer.count_bullet;i++){
       Bullet* b=&GlobalServer.bullets[i];
-      mvprintw(y+i,x,"%d : x %f y %f dx %f dy %f from %d",i+1,b->x,b->y,b->dx,b->dy,b->TankId);
+      mvprintw(y+i,x,"%d : x %f y %f dx %f dy %f from %d speed %f",i+1,b->x,b->y,b->dx,b->dy,b->TankId,b->speed);
    }
    refresh();
 }

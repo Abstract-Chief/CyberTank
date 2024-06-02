@@ -6,7 +6,7 @@ enum BaseColorPair {
    RedWhite=230,
    NUllRed,
    YellowBlue,
-   Yellow,
+   Yellow=237,
    Red,
    Blue,
 };

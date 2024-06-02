@@ -2,8 +2,14 @@
 #include "server_logic.h"
 #include <string.h>
 #include <stdio.h>
-#define BulletVelocityAlpha -0.0005
-#define BulletVelocity 0.01
+#define BulletVelocityAlpha -0.00001
+#define BulletVelocity 0.2
+float mod(float data){
+   return (data<0 ? data*-1:data);
+}
+float get_znak(float data){
+   return (data<0 ? -1:1);
+}
 Player* GetPlayer(Session *session){
    for(int i=0;i<GlobalServer.count_players;i++){
       if(GlobalServer.player[i].session->id==session->id){
@@ -67,13 +73,11 @@ void DelBullet(int index){
 void BulletHandler(int mils){
    for(int i=0;i<GlobalServer.count_bullet;i++){
       Bullet *bullet=&GlobalServer.bullets[i];
-      bullet->x+=bullet->dx*mils*BulletVelocity;
-      bullet->y+=bullet->dy*mils*BulletVelocity;
-      if(bullet->dx>0)
-         bullet->dx+=BulletVelocityAlpha*mils;
-      if(bullet->dy>0)
-         bullet->dy+=BulletVelocityAlpha*mils/2;
-      if(bullet->dx<=0 && bullet->dy<=0)
+      if(mils==0) mils=1;
+      bullet->x+=bullet->dx*mils*bullet->speed;
+      bullet->y+=bullet->dy*mils*bullet->speed;
+      bullet->speed+=BulletVelocityAlpha*mils;
+      if(bullet->speed<0)
          DelBullet(i--);
    }
 }
@@ -87,8 +91,9 @@ void AddBullet(Player* player){
    Bullet *bullet=&GlobalServer.bullets[GlobalServer.count_bullet++];
    bullet->x=player->pos.x;//chyba
    bullet->y=player->pos.y;//chyba
-   coord one_vector={1,0};
-   coord result=get_angle_vector(one_vector,player->GunAngle);
+   coord one_vector={0,1};
+   coord result=get_angle_vector(one_vector,player->GunAngle+5);
+   bullet->speed=BulletVelocity;
    bullet->dx=result.x;
    bullet->dy=result.y;
    bullet->TankId=player->session->id;

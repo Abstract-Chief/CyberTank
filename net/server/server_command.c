@@ -20,7 +20,7 @@ int GameInfoResultHandler(Session* session,Packet *packet){
    write(session->sock,&GlobalServer.count_bullet,sizeof(int));
    write(session->sock,&n_pl,sizeof(int));
    for(int i=0;i<GlobalServer.count_bullet;i++){
-      coord bullet_pos={GlobalServer.bullets[i].x,GlobalServer.bullets[i].x};
+      coord bullet_pos={GlobalServer.bullets[i].x,GlobalServer.bullets[i].y};
       write(session->sock,&bullet_pos,sizeof(coord));
    }
    for(int i=0;i<GlobalServer.count_players;i++){
@@ -52,6 +52,7 @@ int UpdateGameInfoTankHadler(Session* session,Packet *packet){
    Player* pl=GetPlayer(session);
    if(pl==NULL) return 0;
    struct UserInfoPos *info=(struct UserInfoPos *)packet->data;
+   mvprintw(0,0,"%lf",info->GunAngle);
    pl->pos=info->pos;
    pl->rotate=info->rotate;
    pl->GunAngle=info->GunAngle;

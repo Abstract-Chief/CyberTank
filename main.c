@@ -8,6 +8,7 @@ int main(){
    init();
    InitDebugerOutput(1,"Errors");
    init_graphick_obj();
+   timeout(0);
    raw();
    Client *client=create_client("127.0.0.1",1223);
    add_client_command(client,GameInfoResultPacket,GameInfoResultHandler);
@@ -19,6 +20,6 @@ int main(){
    add_handler(GlobalEngine,login,"login");
    add_handler(GlobalEngine,game,"game");
    set_with_name(GlobalEngine,"login");
-   game_module(client,GlobalEngine,30);
+   game_module(client,GlobalEngine,20);
    /*return close();*/
 }

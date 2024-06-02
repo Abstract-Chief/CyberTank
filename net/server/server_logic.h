@@ -13,6 +13,7 @@ enum WorldSide{
 };
 typedef struct{
    float x,y,dx,dy;
+   float speed;
    int TankId;
 }Bullet;
 typedef struct{
