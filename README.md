@@ -8,10 +8,12 @@ Tank Arena is a console game written in C using socket technology for online mul
 
 ![image](https://github.com/Abstract-Chief/CyberTank/assets/92479577/a4d290a4-df57-4351-a544-89fb008899f2)
 
-#Tank Movement
+# Tank Movement
+
 ![Запись экрана от 08 12 23 15_53_17](https://github.com/Abstract-Chief/CyberTank/assets/92479577/28bf4e23-5eb8-4608-82d8-e5003edab188)
 
-#Tank animation in AsciiPaint
+# Tank animation in AsciiPaint
+
 ![44b63a28-1fa3-4293-99f5-a3fc80aa6e45](https://github.com/Abstract-Chief/CyberTank/assets/92479577/6ea091fd-3b7d-4564-a832-c635cbec55cd)
 
 
