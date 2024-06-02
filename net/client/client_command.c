@@ -1,10 +1,13 @@
 /*File "client_command.c" create by abstarct, (сб, 09-гру-2023 18:11:44 +0200)*/
 #include <string.h>
 #include "client_command.h"
+#include "../general/packets/packets.h"
+#include "../general/socket/packet.h"
 #include "../../Debugger/debug.h"
 #include "../../player/handlers.h"
 #include "../../graphick/reader.h"
 #include "../../objects/storage.h"
+#include "../../init/init.h"
 int LoginServerHandler(Session* session,Packet *packet){
    int data=*packet->data;
    if(data) session->login=1;
@@ -36,19 +39,36 @@ int GameInfoResultHandler(Session* session,Packet *packet){
 int GetHitHandler(Session* session,Packet *packet){
    endwin();
    coord *pos=(coord*)packet->data;
-   printf("get git to %f %f\n",pos->x,pos->y);
-   exit(1);
+   ActivateAnimation(pos->x,pos->y,BoomAnimation,GlobalEngine->storage->general_win);
    return 0;
 }
 int GetSpawnHandler(Session* session,Packet *packet){
    coord *pos=(coord*)packet->data;
+   Tank* tank=&GlobalEngine->storage->tank;
    GlobalEngine->storage->tank.pos=*pos;
+   struct UserInfoPos info={tank->pos,tank->rotate,
+      (double)tank->angle,0,(tank->dx || tank->dy),tank->fire};
+   mvprintw(getmaxy(stdscr)/2-1,getmaxx(stdscr)/2-12,"                         ");
+   mvprintw(getmaxy(stdscr)/2,getmaxx(stdscr)/2-12," press enter for respawn ");
+   mvprintw(getmaxy(stdscr)/2+1,getmaxx(stdscr)/2-12,"                         ");
+   refresh();
+   int input=getch();
+   while(input!=enter_key){
+      if(input==3){
+         endwin();
+         exit(1);
+      }
+      input=getch();
+   }
+   Packet pack_s={UpdateGameInfoTankPacket,UserInfoPosSize,(char*)&info};
+   session_send(GlobalEngine->client->session,&pack_s);
+   erprintf(1,"send to server %f %f %d",tank->pos.x,tank->pos.y,tank->angle);
    return 0;
 }
 #include <stdio.h>
 int SetBoomInfoHandler(Session* session,Packet *packet){
    coord *pos=(coord*)packet->data;
-   ActivateAnimation(pos->x,pos->y,BoomAnimation,stdscr);
+   ActivateAnimation(pos->x,pos->y,BoomAnimation,GlobalEngine->storage->general_win);
    erprintf(1,"set bomb %f %f\n",pos->x,pos->y);
    return 0;
 }

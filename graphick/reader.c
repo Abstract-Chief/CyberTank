@@ -70,13 +70,14 @@ Animation* ParseAnim(FILE *file){
    return anim;
 }
 
-Animation* AnimationParse(const char* filename){
+Animation* AnimationParse(const char* filename,bool loop){
    FILE *file=fopen(filename,"rb");
    if(file==NULL){
       printf("error open %s",filename);
       exit(1);
    }
    Animation* anim=ParseAnim(file);
+   anim->loop=loop;
    fclose(file);
    return anim;
 }
@@ -104,7 +105,7 @@ bool graphick_anim(WINDOW *win,int x,int y,Animation *anim,float d,bool mirror_x
    anim->n_layer+=d;
    if(anim->n_layer>=anim->count-1){
       anim->n_layer=0;
-      return 1;
+      return !anim->loop;//return 0 if looping 1 is not loop
    } 
    return 0;
 }
@@ -113,7 +114,7 @@ bool graphick_animc(WINDOW *win,int x,int y,Animation *anim,float d,bool mirror_
    anim->n_layer+=d;
    if(anim->n_layer>=anim->count-1){
       anim->n_layer=0;
-      return 1;
+      return !anim->loop;
    } 
    return 0;
 }

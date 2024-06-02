@@ -14,6 +14,9 @@
    /*UpdateGameInfoBulletPacket,*/
    /*UpdateGameTankInfoPacket,*/
 int GameInfoResultHandler(Session* session,Packet *packet){
+   Player *pl=GetPlayer(session);
+   if(!pl->was_updated && GlobalServer.count_bullet==0) return 0;
+   pl->was_updated=0;
    Packet packet_send={GameInfoResultPacket,0,0};
    session_send(session,&packet_send);
    int n_pl=GlobalServer.count_players-1;
@@ -41,13 +44,15 @@ int LoginServerResultHandler(Session* session,Packet *packet){
    session_send(session,&packet_send);
    Packet packet_send_spawn={GetSpawnPacket,sizeof(coord),(char*)&GlobalServer.player[GlobalServer.count_players-1].pos};
    session_send(session,&packet_send_spawn);
+   active_all_players();
    return 0;
 }
 int UpdateGameInfoFireHadler(Session* session,Packet *packet){
    Player* pl=GetPlayer(session);
    if(pl==NULL) return 0;
    AddBullet(pl);
-   /*printf("Add Bullet\n");*/
+   active_all_players();
+   GameInfoResultHandler(session,NULL);
    return 0;
 }
 int UpdateGameInfoTankHadler(Session* session,Packet *packet){
@@ -59,5 +64,6 @@ int UpdateGameInfoTankHadler(Session* session,Packet *packet){
    pl->fire=info->fire;
    pl->GunAngle=info->GunAngle;
    pl->move=info->move;
+   active_all_players();
    return 0;
 }

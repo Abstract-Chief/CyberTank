@@ -1,6 +1,7 @@
 /*File "graphick.c" create by abstarct, (чт, 07-гру-2023 16:41:26 +0200)*/
 #include "../objects/storage.h"
 #include "../physick/physick.h"
+#include "../player/handlers.h"
 #include "reader.h"
 #include <math.h>
 #include "../init/init.h"
@@ -23,21 +24,19 @@ void graphick_gun(WINDOW *win,double angle,int x,int y,bool fire){
    mvwprintw(win,center.y+vector.y,center.x+vector.x," ");
    wattroff(win,COLOR_PAIR(21));
    if(fire)
-      ActivateAnimation(center.x+vector.x,center.y+vector.y,BoomAnimation,stdscr);
+      ActivateAnimation(center.x+vector.x,center.y+vector.y,BoomAnimation,win);
 }
 void graphick_arrow(Tank *tank,coord pos,int len){
-   coord size={getmaxx(stdscr),getmaxy(stdscr)};
+   coord size={getmaxx(GlobalEngine->storage->general_win),getmaxy(GlobalEngine->storage->general_win)};
    coord vector={pos.x-tank->pos.x,pos.y-tank->pos.y};
    coord mvector=normilize(vector);
    mvector.x*=len*2;
    mvector.y*=len;
    if(get_module(vector)<=20) return;
    int y=mvector.y+size.y/2,x=mvector.x+size.x/2;
-   attron(COLOR_PAIR(Red));
-     mvprintw(y,x+1,"#");
-    mvprintw(y+1,x,"###");
-   mvprintw(y+2,x+1,"#");
-   attroff(COLOR_PAIR(Red));
+   wattron(GlobalEngine->storage->general_win,COLOR_PAIR(Red));
+    mvwprintw(GlobalEngine->storage->general_win,y,x,"#");
+   wattroff(GlobalEngine->storage->general_win,COLOR_PAIR(Red));
 }
 /*void graphick_tank(Tank* tank,int mils){*/
    /*Animation *anim=(tank->rotate%2==0 ?  tank->anim_h : tank->anim_v);*/

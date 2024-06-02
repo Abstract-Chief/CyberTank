@@ -5,12 +5,15 @@
 Animation* BoomAnimation;
 Animation* TankAnimationV;
 Animation* TankAnimationH;
+Animation* BoomAnimationLoop;
 #define BoomSpeed 0.015
 void init_graphick_obj(){
-   BoomAnimation=AnimationParse("data/boom.eanim");
+   BoomAnimation=AnimationParse("data/boom.eanim",0);
+   BoomAnimationLoop=AnimationParse("data/boom.eanim",1);
    BoomAnimation->speed=BoomSpeed;
-   TankAnimationV=AnimationParse("data/tank_v.eanim");
-   TankAnimationH=AnimationParse("data/tank_h.eanim");
+   BoomAnimationLoop->speed=BoomSpeed;
+   TankAnimationV=AnimationParse("data/tank_v.eanim",1);
+   TankAnimationH=AnimationParse("data/tank_h.eanim",1);
 }
 
 void init_tank(Tank *tank,int x,int y,int hp,int reload,const char *filename_v,const char *filename_h,float speed_anim){
@@ -29,8 +32,14 @@ void init_tank(Tank *tank,int x,int y,int hp,int reload,const char *filename_v,c
    tank->rotate=South;
    wrefresh(tank->win);
 }
+#define GENERAL_SCREEN_SIZEX 200
+#define GENERAL_SCREEN_SIZEY 50
 void init_storage(StorageGame *storage){
    init_tank(&storage->tank,10,10,0,0,"data/tank_v.eanim","data/tank_h.eanim",0.09);
+   storage->general_win=newwin(GENERAL_SCREEN_SIZEY,GENERAL_SCREEN_SIZEX
+         ,(getmaxy(stdscr)-GENERAL_SCREEN_SIZEY)/2,(getmaxx(stdscr)-GENERAL_SCREEN_SIZEX)/2);
+   wrefresh(storage->general_win);
+   refresh();
    memset(storage->users,0,sizeof(storage->users));
 }
 void init(){

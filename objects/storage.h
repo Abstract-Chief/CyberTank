@@ -5,6 +5,7 @@
 #include "../physick/physick.h"
 #include "../net/general/inet_structure.h"
 extern Animation* BoomAnimation;
+extern Animation* BoomAnimationLoop;
 extern Animation* TankAnimationV;
 extern Animation* TankAnimationH;
 enum WorldSide{
@@ -23,7 +24,6 @@ typedef struct{
    enum WorldSide rotate;
    WINDOW *win,*arrrow_win;
    bool fire;
-
 } Tank;
 typedef struct{
    coord pos;
@@ -33,6 +33,7 @@ typedef struct StorageGame{
    Bullet bullets[32*4];
    struct UserInfoPos users[32];
    Tank tank;
+   WINDOW* general_win;
 } StorageGame;
 typedef struct{
    WINDOW *win;
@@ -40,7 +41,6 @@ typedef struct{
    Animation *anim;
    int dx,dy;
 } OneTimeAnim;
-
 //void AddBullet(Tank *tank,coord vector);
 //void BulletLoop(int mils);
 void ActivateAnimation(int x,int y,Animation* anim,WINDOW *win);

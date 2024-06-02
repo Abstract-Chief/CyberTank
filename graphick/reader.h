@@ -21,8 +21,9 @@ typedef struct{
    int count;
    float n_layer,speed;
    Layer *layers[32];
+   bool loop;
 } Animation;
-Animation* AnimationParse(const char* filename);
+Animation* AnimationParse(const char* filename,bool loop);
 Layer* LayerParse(const char* filename);
 void graphick_layer(WINDOW *win,int x,int y,Layer *layer,bool mirror_x,bool mirror_y);
 bool graphick_anim(WINDOW *win,int x,int y,Animation *anim,float d,bool mirror_x,bool mirror_y);

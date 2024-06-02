@@ -12,7 +12,7 @@ GameEngine* GlobalEngine;
 int MovingKeys[4]={UpKey,RightKey,DownKey,LeftKey};
 static int FireKeys[3]={106,107,108};
 #define GunPower 3
-#define InetSendingN 10
+#define InetSendingN 1
 float TankSpeed=1;
 float TankRotatingSpeed=2;
 int IndexerCount=0;
@@ -67,13 +67,11 @@ void TankHandler(Tank *tank,int input){
       if(tank->angle>=360) tank->angle-=360;
       need_send=1;
    } 
-   if(IndexerCount==InetSendingN || need_send){
+   if(need_send){
       struct UserInfoPos info={tank->pos,tank->rotate,
          (double)tank->angle,0,(tank->dx || tank->dy),t_fire};
       Packet packet={UpdateGameInfoTankPacket,UserInfoPosSize,(char*)&info};
       session_send(GlobalEngine->client->session,&packet);
       erprintf(1,"send to server %f %f %d",tank->pos.x,tank->pos.y,tank->angle);
-      if(!need_send)
-         IndexerCount=0;
-   }else IndexerCount++;
+   }
 }

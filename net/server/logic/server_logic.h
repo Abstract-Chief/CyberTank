@@ -1,4 +1,4 @@
-/*File "server_logic.h" create by abstarct, (сб, 09-гру-2023 16:20:52 +0200)*/
+/*File "server_logic.c" create by abstarct, (сб, 09-гру-2023 16:20:52 +0200)*/
 #ifndef ABSTARCT_SERVER_LOGIC_H_SENTURY
 #define ABSTARCT_SERVER_LOGIC_H_SENTURY
 #include "../../../physick/physick.h"
@@ -26,6 +26,7 @@ typedef struct{
    Session *session;
    char name[32];
    HitBox hitbox;
+   bool was_updated;
 }Player;
 typedef struct{
    Player player[MAX_PLAYER_COUNT];
@@ -38,5 +39,6 @@ int add_player(Session* session,const char *name);
 void AddBullet(Player* player);
 int del_player(Session* session);
 void ServerLogic(int mils);
+void active_all_players();
 extern ServerInfo GlobalServer;
 #endif

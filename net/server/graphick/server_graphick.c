@@ -24,7 +24,9 @@ void init_graphick(){
 const char *WorldSideText[4]={"North","East","South","West"};
 void graphick_server_info(int mils,Server *s,int x,int y){
    erase();
-   mvprintw(y,x,"ServerInfo: (players count) (bullets count) (session count) (time)");
+   char ip[16];
+   getip_sock(s->sock,ip);
+   mvprintw(y,x,"ServerInfo(%s): (players count) (bullets count) (session count) (time)",ip);
    attron(COLOR_PAIR(NUllRed));
    mvprintw(y+1,x,"                  %d             %d                  %d      %d",
          GlobalServer.count_players,GlobalServer.count_bullet,s->count,mils);

@@ -88,6 +88,7 @@ int main(int argc,char **argv){
                s->CloseConnectionHandler(s,s->clientses[i]);
                close(s->clientfd[i]);
                free(s->clientses[i]);
+               s->count--;
                s->clientfd[i]=-1;
             }
          }

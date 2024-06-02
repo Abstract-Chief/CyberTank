@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "../command/server_command.h"
 #define BulletVelocityAlpha -0.0001
-#define BulletVelocity 0.1
+#define BulletVelocity 0.12
 #define MAP_SIZE 200
 #define MINIMAL_SPAWN_DISTANCE 50
 int generateRandomNumber(int a, int b) {
@@ -58,6 +58,7 @@ coord get_spawn_point(){
 void spawn_player(Player *pl){
    pl->SpawnTime=time(NULL);
    pl->pos=get_spawn_point();
+   active_all_players();
 }
 void set_player(Session *session,const char *name,int index){
    Player *pl=&GlobalServer.player[index];
@@ -80,15 +81,15 @@ int del_player_index(int index){
       memcpy(a,b,sizeof(Player));
    }
    GlobalServer.count_players--;
+   active_all_players();
    return 0;
 }
 int del_player(Session* session){
    for(int i=0;i<GlobalServer.count_players;i++){
       GlobalServer.player[i].session->id=session->id;
       if(GlobalServer.player[i].session->id==session->id){
-         mvprintw(0,0,"del player %d",session->id);
-         refresh();
          del_player_index(i);
+         active_all_players();
          return 1;   
       }
    }
@@ -135,11 +136,21 @@ void PlayerCheck(){
       coord pos;
       int r=CheckPlayerCollisionBullet(pl,&pos);
       if(r>=0){
-         Packet packet={GetHitPacket,sizeof(coord),(char*)&pos};
+         Packet packet={SetBoomInfo,sizeof(coord),(char*)&pos};
+         coord pos_spawn=get_spawn_point();
+         pl->pos.x=-10000;
+         pl->pos.y=-10000;
+         Packet packet2={GetSpawnPacket,sizeof(coord),(char*)&pos_spawn};
          session_send(pl->session,&packet);
+         session_send(pl->session,&packet2);
          DelBullet(r);
-         del_player_index(i);
       }
+   }
+}
+void active_all_players(){
+   for(int i=0;i<GlobalServer.count_players;i++){
+      Player *pl = &GlobalServer.player[i];
+      pl->was_updated=true;
    }
 }
 void ServerLogic(int mils){
