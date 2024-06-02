@@ -1,8 +1,9 @@
 /*File "server_logic.h" create by abstarct, (сб, 09-гру-2023 16:20:52 +0200)*/
 #ifndef ABSTARCT_SERVER_LOGIC_H_SENTURY
 #define ABSTARCT_SERVER_LOGIC_H_SENTURY
-#include "../../physick/physick.h"
-#include "../general/socket/socket.h"
+#include "../../../physick/physick.h"
+#include "../../general/socket/socket.h"
+#include "collision.h"
 #include <time.h>
 #define MAX_PLAYER_COUNT 32
 enum WorldSide{
@@ -24,6 +25,7 @@ typedef struct{
    time_t SpawnTime;
    Session *session;
    char name[32];
+   HitBox hitbox;
 }Player;
 typedef struct{
    Player player[MAX_PLAYER_COUNT];

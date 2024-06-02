@@ -20,3 +20,8 @@ coord normilize(coord v){
    coord result={v.x/size,v.y/size};
    return result;
 }
+double get_distance(coord a,coord b){
+   b.x-=a.x;
+   b.y-=a.y;
+   return get_module(b);
+}

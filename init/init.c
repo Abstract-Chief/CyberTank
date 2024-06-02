@@ -40,7 +40,7 @@ void init(){
    init_pair(RedWhite,COLOR_WHITE,COLOR_RED);
    init_pair(NUllRed,COLOR_RED,-1);
    init_pair(YellowBlue,COLOR_BLUE,COLOR_YELLOW);
-   init_pair(Yellow,COLOR_YELLOW,COLOR_YELLOW);
+   init_pair(Yellow,38,38);
    init_pair(Red,COLOR_RED,COLOR_RED);
    init_pair(Blue,COLOR_BLUE,COLOR_BLUE);
    curs_set(0);

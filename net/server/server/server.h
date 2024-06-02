@@ -1,9 +1,9 @@
 /*File "server.c" create by abstarct, (сб, 09-гру-2023 11:29:23 +0200)*/
 #ifndef ABSTARCT_SERVER_H_SENTURY
 #define ABSTARCT_SERVER_H_SENTURY
-#include "../general/socket/socket.h"
-#include "../general/storage/tree.h"
-#include "server_logic.h"
+#include "../../general/socket/socket.h"
+#include "../../general/storage/tree.h"
+#include "../logic/server_logic.h"
 #include <stdlib.h>
 typedef struct Server{
    int stdinput;bool stdflag;

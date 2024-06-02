@@ -13,6 +13,7 @@ enum ClientPacketsType{
    GetGameInfoPacket,
    UpdateGameInfoFirePacket,
    UpdateGameInfoTankPacket,
+   SetBoomInfo,
 };
 
 #endif

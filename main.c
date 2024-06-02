@@ -11,8 +11,11 @@ int main(){
    timeout(0);
    raw();
    Client *client=create_client("127.0.0.1",1223);
+   add_client_command(client,GetSpawnPacket,GetSpawnHandler);
+   add_client_command(client,GetHitPacket,GetHitHandler);
    add_client_command(client,GameInfoResultPacket,GameInfoResultHandler);
    add_client_command(client,LoginServerResultPacket,LoginServerHandler);
+   add_client_command(client,SetBoomInfo,SetBoomInfoHandler);
    GlobalEngine = create_game_engine();
    GlobalEngine->client=client;
    init_storage(GlobalEngine->storage);
@@ -20,6 +23,5 @@ int main(){
    add_handler(GlobalEngine,login,"login");
    add_handler(GlobalEngine,game,"game");
    set_with_name(GlobalEngine,"login");
-   game_module(client,GlobalEngine,20);
-   /*return close();*/
+   game_module(client,GlobalEngine,30);
 }

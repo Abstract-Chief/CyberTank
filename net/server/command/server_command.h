@@ -2,8 +2,8 @@
 #ifndef ABSTARCT_SERVER_COMMAND_H_SENTURY
 #define ABSTARCT_SERVER_COMMAND_H_SENTURY
 
-#include "server.h"
-#include "../general/packets/packets.h"
+#include "../server/server.h"
+#include "../../general/packets/packets.h"
 
 int GameInfoResultHandler(Session* session,Packet *packet);
 int LoginServerResultHandler(Session* session,Packet *packet);

@@ -1,8 +1,8 @@
 /*File "server.c" create by abstarct, (пт, 08-гру-2023 23:25:47 +0200)*/
 #include "../general/socket/socket.h"
-#include "server_graphick.h"
-#include "server_command.h"
-#include "server.h"
+#include "graphick/server_graphick.h"
+#include "command/server_command.h"
+#include "server/server.h"
 #include <stdio.h>
 #include <errno.h>
 #include <error.h>

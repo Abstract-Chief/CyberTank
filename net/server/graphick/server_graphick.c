@@ -1,7 +1,7 @@
 /*File "server_graphick.c" create by abstarct, (сб, 09-гру-2023 22:05:08 +0200)*/
 #include <curses.h>
 #include "server_graphick.h"
-#include "server_logic.h"
+#include "../logic/server_logic.h"
 enum BaseColorPair {
    RedWhite=230,
    NUllRed,
@@ -52,6 +52,10 @@ void graphick_server_info(int mils,Server *s,int x,int y){
       addstr("angle: ");
       attron(COLOR_PAIR(NUllRed));
       printw("%f",pl->GunAngle);
+      attroff(COLOR_PAIR(NUllRed));
+      addstr("fire: ");
+      attron(COLOR_PAIR(NUllRed));
+      printw("%s",(pl->fire ? "true" : "false"));
       attroff(COLOR_PAIR(NUllRed));
    }
    y+=4+GlobalServer.count_players;

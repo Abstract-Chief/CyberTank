@@ -14,7 +14,7 @@ void draw_line(WINDOW *win,coord a,coord v,char symbol){
     }
 }
 void graphick_gun(WINDOW *win,double angle,int x,int y,bool fire){
-   coord vector_base={9,0};
+   coord vector_base={10,0};
    coord vector=get_angle_vector(vector_base, angle);
    vector.x*=2;
    coord center={x,y};
@@ -23,7 +23,7 @@ void graphick_gun(WINDOW *win,double angle,int x,int y,bool fire){
    mvwprintw(win,center.y+vector.y,center.x+vector.x," ");
    wattroff(win,COLOR_PAIR(21));
    if(fire)
-      ActivateAnimation(x+vector.x,y+vector.y, BoomAnimation,win);
+      ActivateAnimation(center.x+vector.x,center.y+vector.y,BoomAnimation,stdscr);
 }
 void graphick_arrow(Tank *tank,coord pos,int len){
    coord size={getmaxx(stdscr),getmaxy(stdscr)};

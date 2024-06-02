@@ -16,13 +16,13 @@ int game(GameEngine *engine,int mils){
    Tank* tank=&engine->storage->tank;
    TankHandler(tank,input);
    move_tank(tank);
+   werase(stdscr);
    graphick_world(engine,mils);
    AnimationLoop(mils);
    Packet p={GetGameInfoPacket,0,0};
-   session_send(engine->client->session,&p);
-   client_handler(engine->client);
    wnoutrefresh(stdscr);
    doupdate();
-   werase(stdscr);
+   session_send(engine->client->session,&p);
+   client_handler(engine->client);
    return 0;
 }

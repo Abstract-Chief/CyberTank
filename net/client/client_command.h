@@ -6,5 +6,6 @@ int LoginServerHandler(Session* session,Packet *packet);
 int GameInfoResultHandler(Session* session,Packet *packet);
 int GetHitHandler(Session* session,Packet *packet);
 int GetSpawnHandler(Session* session,Packet *packet);
+int SetBoomInfoHandler(Session* session,Packet *packet);
 
 #endif

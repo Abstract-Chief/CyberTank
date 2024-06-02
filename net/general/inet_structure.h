@@ -3,7 +3,6 @@
 #define ABSTARCT_INET_STRUCTURE_H_SENTURY
 #include "../../physick/physick.h"
 #include <curses.h>
-#define UserInfoPosSize (sizeof(coord)+sizeof(int)+sizeof(double)+sizeof(char)+2*sizeof(bool)+1)
 struct UserInfoPos {
    coord pos;
    int rotate;
@@ -11,5 +10,6 @@ struct UserInfoPos {
    char id;
    bool move,fire;
 };
+#define UserInfoPosSize (sizeof(struct UserInfoPos))
 
 #endif

@@ -2,14 +2,30 @@
 #include "server_logic.h"
 #include <string.h>
 #include <stdio.h>
-#define BulletVelocityAlpha -0.00001
-#define BulletVelocity 0.2
+#include <curses.h>
+#include "collision.h"
+#include <time.h>
+#include <stdlib.h>
+#include "../command/server_command.h"
+#define BulletVelocityAlpha -0.0001
+#define BulletVelocity 0.1
+#define MAP_SIZE 200
+#define MINIMAL_SPAWN_DISTANCE 50
+int generateRandomNumber(int a, int b) {
+    return rand() % (b - a + 1) + a;
+}
 float mod(float data){
    return (data<0 ? data*-1:data);
 }
 float get_znak(float data){
    return (data<0 ? -1:1);
 }
+/*void set_boom_all_player(Session* session,coord pos){*/
+   /*Packet packet={SetBoomInfo,sizeof(coord),(char*)&pos};*/
+   /*for(int i=0;i<GlobalServer.count_players;i++)*/
+      /*if(GlobalServer.player[i].session->id!=session->id)*/
+         /*session_send(GlobalServer.player[i].session,&packet);*/
+/*}*/
 Player* GetPlayer(Session *session){
    for(int i=0;i<GlobalServer.count_players;i++){
       if(GlobalServer.player[i].session->id==session->id){
@@ -26,16 +42,36 @@ bool CheckLogin(const char *name){
    }
    return 0;
 }
+coord get_spawn_point(){
+   coord r={0,0};
+   bool flag=0;
+   do{
+      r.x=generateRandomNumber(-MAP_SIZE,MAP_SIZE);
+      r.y=generateRandomNumber(-MAP_SIZE,MAP_SIZE);
+      for(int i=0;i<GlobalServer.count_players;i++){
+         Player *pl=&GlobalServer.player[i];
+         if(get_distance(r,pl->pos)<=MINIMAL_SPAWN_DISTANCE) flag=1;
+      }
+   }while(flag);
+   return r;
+}
+void spawn_player(Player *pl){
+   pl->SpawnTime=time(NULL);
+   pl->pos=get_spawn_point();
+}
 void set_player(Session *session,const char *name,int index){
-   GlobalServer.player[index].session=session;
-   memcpy(GlobalServer.player[index].name,name,sizeof(GlobalServer.player[index].name));
+   Player *pl=&GlobalServer.player[index];
+   pl->session=session;
+   coord size={26,13};
+   pl->hitbox=create_hitbox(size,true);//center hitbox
+   memcpy(pl->name,name,sizeof(pl->name));
+   spawn_player(pl);
 }
 int add_player(Session *session,const char *name){
    if(GlobalServer.count_players>=MAX_PLAYER_COUNT-1) return -1;
    if(CheckLogin(name)) return -2;
    set_player(session,name,GlobalServer.count_players);
    GlobalServer.count_players++;
-   /*printf("succeful add player %s\n",name);*/
    return 0;
 }
 int del_player_index(int index){
@@ -47,11 +83,11 @@ int del_player_index(int index){
    return 0;
 }
 int del_player(Session* session){
-
    for(int i=0;i<GlobalServer.count_players;i++){
       GlobalServer.player[i].session->id=session->id;
       if(GlobalServer.player[i].session->id==session->id){
-         /*printf("del player %d %s\n",session->id,GlobalServer.player[i].name);*/
+         mvprintw(0,0,"del player %d",session->id);
+         refresh();
          del_player_index(i);
          return 1;   
       }
@@ -81,20 +117,45 @@ void BulletHandler(int mils){
          DelBullet(i--);
    }
 }
-void PlayerCheck(int mils){
+int CheckPlayerCollisionBullet(Player *p,coord *pos){
+   for(int i=0;i<GlobalServer.count_bullet;i++){
+      Bullet *bullet=&GlobalServer.bullets[i];
+      coord pos_b={bullet->x,bullet->y};
+      if(bullet->TankId==p->session->id) continue;
+      if(check_collision(&p->hitbox,p->pos,pos_b)){
+         *pos=pos_b;
+         return i;
+      }
+   }
+   return -1;
+}
+void PlayerCheck(){
+   for(int i=0;i<GlobalServer.count_players;i++){
+      Player *pl = &GlobalServer.player[i];
+      coord pos;
+      int r=CheckPlayerCollisionBullet(pl,&pos);
+      if(r>=0){
+         Packet packet={GetHitPacket,sizeof(coord),(char*)&pos};
+         session_send(pl->session,&packet);
+         DelBullet(r);
+         del_player_index(i);
+      }
+   }
 }
 void ServerLogic(int mils){
    BulletHandler(mils);
-   PlayerCheck(mils);
+   PlayerCheck();
 }
 void AddBullet(Player* player){
    Bullet *bullet=&GlobalServer.bullets[GlobalServer.count_bullet++];
-   bullet->x=player->pos.x;//chyba
-   bullet->y=player->pos.y;//chyba
+   bullet->x=player->pos.x;
+   bullet->y=player->pos.y;
    coord one_vector={0,1};
-   coord result=get_angle_vector(one_vector,player->GunAngle+5);
+   coord result=get_angle_vector(one_vector,player->GunAngle);
+   /*coord boom_pos={bullet->x+result.x,bullet->y};*/
+   /*set_boom_all_player(player->session,boom_pos);*/
    bullet->speed=BulletVelocity;
-   bullet->dx=result.x;
+   bullet->dx=result.x*2;
    bullet->dy=result.y;
    bullet->TankId=player->session->id;
 }

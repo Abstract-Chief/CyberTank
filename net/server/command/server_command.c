@@ -1,9 +1,9 @@
 /*File "server_command.c" create by abstarct, (сб, 09-гру-2023 15:22:15 +0200)*/
 #include "server_command.h"
-#include "server_logic.h"
-#include "../general/inet_structure.h"
+#include "../logic/server_logic.h"
+#include "../../general/inet_structure.h"
 #include <stdio.h>
-#include "../general/packets/packets.h"
+#include "../../general/packets/packets.h"
    /*GetSpawnPacket=2,*/
    /*GetHitPacket,*/
    /*GameInfoResultPacket,*/
@@ -27,7 +27,7 @@ int GameInfoResultHandler(Session* session,Packet *packet){
       Player* pl=&GlobalServer.player[i];
       if(pl->session->id==session->id) continue;
       struct UserInfoPos info={pl->pos,pl->rotate,pl->GunAngle,pl->session->id,pl->move,pl->fire};
-      write(session->sock,&info,UserInfoPosSize);
+      write(session->sock,&info,sizeof(info));
    }
    return 0;
 }
@@ -39,6 +39,8 @@ int LoginServerResultHandler(Session* session,Packet *packet){
    else result=0;
    Packet packet_send={LoginServerResultPacket,sizeof(int),(char*)&result};
    session_send(session,&packet_send);
+   Packet packet_send_spawn={GetSpawnPacket,sizeof(coord),(char*)&GlobalServer.player[GlobalServer.count_players-1].pos};
+   session_send(session,&packet_send_spawn);
    return 0;
 }
 int UpdateGameInfoFireHadler(Session* session,Packet *packet){
@@ -52,11 +54,10 @@ int UpdateGameInfoTankHadler(Session* session,Packet *packet){
    Player* pl=GetPlayer(session);
    if(pl==NULL) return 0;
    struct UserInfoPos *info=(struct UserInfoPos *)packet->data;
-   mvprintw(0,0,"%lf",info->GunAngle);
    pl->pos=info->pos;
    pl->rotate=info->rotate;
-   pl->GunAngle=info->GunAngle;
    pl->fire=info->fire;
+   pl->GunAngle=info->GunAngle;
    pl->move=info->move;
    return 0;
 }
